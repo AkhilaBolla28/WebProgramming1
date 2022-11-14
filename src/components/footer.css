@@ -1,0 +1,13 @@
+#footer {
+    /* clear: both;
+    position: relative;
+    height: 200px;
+    margin-top: -200px; */
+    flex: 0 0 50px;
+    margin-top: auto;
+}
+/* .container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  } */

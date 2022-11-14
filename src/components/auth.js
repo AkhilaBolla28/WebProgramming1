@@ -30,7 +30,7 @@ export default class Auth extends Component {
         console.log(data, "userRegister");
         if (data.status == "ok") {
             window.localStorage.setItem("token",data.data);
-            window.location.href = "./SearchBar";
+            window.location.href = "./Searchbar";
           Swal.fire({
             title: "Login",
             text: "Successfully Logged In",
@@ -59,7 +59,7 @@ export default class Auth extends Component {
 
         <div className="mb-3">
           <input
-            type="text"
+            type="password"
             className="form-control"
             placeholder="Enter OTP"
             onChange={(e) => this.setState({ otp: e.target.value })}

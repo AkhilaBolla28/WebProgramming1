@@ -46,7 +46,8 @@ export default class Login extends Component  {
           // alert("login successful");
           window.localStorage.setItem("email", email);
           window.location.href = "./auth";
-        }else if(data.error == "User Not found"){
+        }
+        else if(data.error == "User Not found"){
           Swal.fire({
             title: "Login",
             text: "User Does Not Exists!",

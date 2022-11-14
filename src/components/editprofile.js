@@ -33,17 +33,17 @@ export default class EditProfile extends Component {
 
   handleSubmit() {
     const { name, email, phoneNumber, profession, address } = this.state;
-     if (name === "") {
-      name = window.localStorage.getItem("name");
+     if (name == "") {
+      name = window.localStorage.getItem("name")
      }
      if (profession == "") {
-       profession = window.localStorage.getItem("profession");
+       profession = window.localStorage.getItem("profession")
      }
      if (phoneNumber == "") {
-       phoneNumber = window.localStorage.getItem("phoneNumber");
+       phoneNumber = window.localStorage.getItem("phoneNumber")
      }
      if (address == "") {
-       address = window.localStorage.getItem("address");
+       address = window.localStorage.getItem("address")
      }
 
     fetch("http://localhost:5000/editProfile", {
@@ -94,7 +94,7 @@ export default class EditProfile extends Component {
           <div class="col-md-4">
             <div class="shadow p-3 mb-5 bg-body rounded">
               <form onSubmit={(e) => e.preventDefault()}>
-                <div className="headerStyle">
+              <div className="headerStyle">
                   <h2>Edit Profile</h2>
                 </div>
 

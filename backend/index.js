@@ -1,26 +1,23 @@
-var express = require('express');
+var express = require("express");
 var app = express();
 const mongoose = require("mongoose");
 app.use(express.json());
 const cors = require("cors");
 app.use(cors());
 const bcrypt = require("bcryptjs");
-const request = require('request');
+const request = require("request");
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
 const multer = require("multer");
-const {
-  GridFsStorage
-} = require("multer-gridfs-storage");
+const { GridFsStorage } = require("multer-gridfs-storage");
 const jwt = require("jsonwebtoken");
 var nodemailer = require("nodemailer");
-const { response } = require('express');
+const { response } = require("express");
 
 const JWT_SECRET =
   "hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe";
 
-const mongoUrl =
-  "mongodb+srv://AkhilaBolla:Akhila%40289768@cluster0.cnv5wgk.mongodb.net/?retryWrites=true&w=majority";
+const mongoUrl = "mongodb://localhost:27017";
 
 mongoose
   .connect(mongoUrl, {
@@ -31,7 +28,7 @@ mongoose
     var client = mongoose.connections[0].client;
     var db = mongoose.connections[0].db;
     bucket = new mongoose.mongo.GridFSBucket(db, {
-      bucketName: "newBucket"
+      bucketName: "newBucket",
     });
     console.log(bucket);
   })
@@ -42,7 +39,15 @@ require("./userDetails");
 const User = mongoose.model("reactapp");
 
 app.post("/register", async (req, res) => {
-  const { name, email, profession, phoneNumber, address, password, confirmPassword } = req.body;
+  const {
+    name,
+    email,
+    profession,
+    phoneNumber,
+    address,
+    password,
+    confirmPassword,
+  } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
   try {
@@ -75,7 +80,7 @@ app.post("/login", async (req, res) => {
   }
 
   if (await bcrypt.compare(password, user.password)) {
-    const otp = `${Math.floor(1000 + Math.random()*9000)}`;
+    const otp = `${Math.floor(1000 + Math.random() * 9000)}`;
     var transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -83,7 +88,7 @@ app.post("/login", async (req, res) => {
         pass: "ncswxekgefhkxpbx",
       },
     });
-  
+
     var mailOptions = {
       from: "akhila28.bolla@gmail.com",
       to: user.email,
@@ -108,50 +113,50 @@ app.post("/login", async (req, res) => {
         },
       }
     );
-    res.json({status: "ok"});
-  }else{
+    res.json({ status: "ok" });
+  } else {
     res.json({ status: "error", error: "Invalid Password" });
   }
-  
 });
-
 
 app.post("/login-otp", async (req, res) => {
   const { otp, email } = req.body;
   const user = await User.findOne({ email });
-  if (await otp == user.otp) {
+  if ((await otp) == user.otp) {
     const token = jwt.sign({ email: user.email }, JWT_SECRET);
     if (res.status(201)) {
       return res.json({ status: "ok", data: token });
     } else {
       return res.json({ error: "error" });
     }
-  }});
+  }
+});
 
 app.post("/changepassword", async (req, res) => {
-  const {token, email, currentPassword, newPassword, confirmPassword } = req.body;
+  const { token, email, currentPassword, newPassword, confirmPassword } =
+    req.body;
   const oldUser = await User.findOne({ email });
-if (!oldUser) {
+  if (!oldUser) {
     return res.json({ status: "error" });
-   }
+  }
   const secret = JWT_SECRET + oldUser.password;
-    try {
-      const encryptedPassword = await bcrypt.hash(newPassword, 10);
-      await User.updateOne(
-        {
-          email: email,
+  try {
+    const encryptedPassword = await bcrypt.hash(newPassword, 10);
+    await User.updateOne(
+      {
+        email: email,
+      },
+      {
+        $set: {
+          password: encryptedPassword,
         },
-        {
-          $set: {
-            password: encryptedPassword,
-          },
-        }
-      );
-      return res.json({ status: "ok" });
-    } catch (error) {
-      console.log(error);
-      res.json({ status: "error2" });
-    }
+      }
+    );
+    return res.json({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error2" });
+  }
 });
 
 app.post("/userData", async (req, res) => {
@@ -175,8 +180,6 @@ app.listen(5000, () => {
   console.log("Server Started");
 });
 
-
-
 app.post("/forgotpassword", async (req, res) => {
   const { email } = req.body;
   try {
@@ -199,7 +202,7 @@ app.post("/forgotpassword", async (req, res) => {
 
     var mailOptions = {
       from: "akhila28.bolla@gmail.com",
-      to:  oldUser.email,
+      to: oldUser.email,
       subject: "Password Reset",
       text: link,
     };
@@ -255,7 +258,6 @@ app.post("/reset-password/:id/:token", async (req, res) => {
         },
       }
     );
-    
 
     res.render("index", { email: verify.email, status: "verified" });
   } catch (error) {
@@ -269,120 +271,126 @@ app.post("/editProfile", async (req, res) => {
 
   try {
     const oldUser = await User.findOne({ email });
-    console.log(User)
+    console.log(User);
     if (oldUser) {
-     const result = await User.updateOne(
-      {email:email},{
-        $set:{
-        name:name,
-        profession:profession,
-        phoneNumber:phoneNumber,
-        address:address},
-      });
-      console.log(`${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`)
+      const result = await User.updateOne(
+        { email: email },
+        {
+          $set: {
+            name: name,
+            profession: profession,
+            phoneNumber: phoneNumber,
+            address: address,
+          },
+        }
+      );
+      console.log(
+        `${result.matchedCount} document(s) matched the filter, updated ${result.modifiedCount} document(s)`
+      );
       res.send({ status: "ok" });
     }
-   
   } catch (error) {
     res.send({ status: "error" });
   }
 });
 
 app.get("/searchengine", async (req, res) => {
-  const {title} = req.query;
-  
-  console.log(req.query)
+  const { title } = req.query;
+
+  console.log(req.query);
   const options = {
     url: "http://localhost:9200/wiki_library/_search",
     body: {
-      "query": {
-        "match": {
-          "title": title
-        }
-    
+      query: {
+        match: {
+          title: title,
+        },
       },
-      size: 1000
+      size: 1000,
     },
-    json: true
-  }
-  console.log({ options })
+    json: true,
+  };
+  console.log({ options });
   await request(options, function (err, data) {
     // console.log(data,err);
     res.send(data.body.hits);
   });
-})
-
-// app.post("/insert", async (req, res) => {
-//   try{
-//     console.log(req.body)
-//   }catch(error){
-//     console.log(error);
-//   }
-  
-  //const {etd_file_id, advisor, author, degree, program, title, university, year, text, pdf} = req.body;
-  //const wikifier_terms = [];
-  //wikifier(text,wikifier_terms);
-  // const options = {
-  //   url: "http://localhost:9200/wiki_library/_doc/",
-  //   body: {
-  //     "query": {
-  //       "match": {
-  //         "etd_file_id": etd_file_id,
-  //         "advisor": advisor,
-  //         "author": author,
-  //         "degree": degree,
-  //         "program":program,
-  //         "title": title,
-  //         "university": university,
-  //         "year": year,
-  //         "text": text,
-  //         "wikifier_terms": wikifier_terms,
-  //         "pdf": pdf
-  //       }
-    
-  //     },
-  //   },
-  //   json: true
-  // }
-  //console.log({ options })
-  // await request(options, function (err, data) {
-  //   // console.log(data,err);
-  //   res.send(data.body.hits);
-  // });
-// })
+});
 
 app.post("/insert", async (req, res) => {
-  const {etd_file_id, advisor, author, degree, program, title, university, year, text, pdf} = req.body;
-
+  const {
+    etd_file_id,
+    advisor,
+    author,
+    degree,
+    program,
+    title,
+    university,
+    year,
+    text,
+    pdf,
+  } = req.body;
+  wikifier_terms = [];
+  userKey = "koextlklicciiuokgsbpoupcxraqtz";
   try {
-    console.log("trying")
+    // const options1 = {
+    //   url:"http://www.wikifier.org/annotate-article?text="+text+"&lang=en&userKey=koextlklicciiuokgsbpoupcxraqtz&pageRankSqThreshold=0.2&nTopDfValuesToIgnore=200&nWordsToIgnoreFromList=200&wikiDataClasses=false&wikiDataClassIds=false&support=false&ranges=false&minLinkFrequency=1&includeCosines=false&maxMentionEntropy=3&applyPageRankSqThreshold =true"
+
+    // }
+    // await request.get(options1, function (err, data) {
+    //   //console.log("at request")
+    //   res.send(data);
+    //   //console.log(res.data);
+    //   //wikifier_terms =data;
+    // });
+
+    // console.log("wiki",wikifier_terms);
+    // let filteredannotations = wikifier_terms.map((annotation) => ({
+    //   term : annotation.title,
+    //   url : annotation.url,
+    // }));
+    // wikifier_terms = filteredannotations;
+
     const options = {
-      url: "http://www.wikifier.org/annotate-article?text=" + (text) + "&lang=en",
-      
-    }
-    console.log(options)
-    await request(options, function (err, data) {
-      console.log("at request")
+      url: "http://localhost:9200/wiki_library/_doc/" + etd_file_id,
+      body: {
+        etd_file_id: etd_file_id,
+        advisor: advisor,
+        author: author,
+        degree: degree,
+        program: program,
+        title: title,
+        university: university,
+        year: year,
+        text: text,
+        wikifier_terms: wikifier_terms,
+        pdf: pdf,
+      },
+      json: true,
+    };
+
+    console.log(options);
+    await request.post(options, function (err, data) {
+      //console.log("at request")
       res.send(data);
-      console.log(data)
+      console.log(data);
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
-app.get("/count", async (req, res) =>{
+app.get("/count", async (req, res) => {
   try {
     const options = {
       url: "http://localhost:9200/wiki_library/_count",
-      
-    }
+    };
     await request(options, function (err, data) {
       res.send(data.body);
       // console.log(data)
     });
-  }catch (error) {
-    console.log(error)
+  } catch (error) {
+    console.log(error);
   }
 });
 
@@ -393,40 +401,36 @@ const storage = new GridFsStorage({
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
-        bucketName: "newBucket"
+        bucketName: "newBucket",
       };
       resolve(fileInfo);
     });
-  }
+  },
 });
 
 const upload = multer({
-  storage
+  storage,
 });
 
 app.get("/fileinfo/:filename", (req, res) => {
   const file = bucket
     .find({
-      filename: req.params.filename
+      filename: req.params.filename,
     })
     .toArray((err, files) => {
       if (!files || files.length === 0) {
-        return res.status(404)
-          .json({
-            err: "no files exist"
-          });
+        return res.status(404).json({
+          err: "no files exist",
+        });
       }
-      bucket.openDownloadStreamByName(req.params.filename)
-        .pipe(res);
+      bucket.openDownloadStreamByName(req.params.filename).pipe(res);
     });
 });
 
 app.post("/upload", upload.single("file"), (req, res) => {
-  res.status(200)
-    .send("File uploaded successfully");
+  res.status(200).send("File uploaded successfully");
 });
 
 app.post("/upload/multiple", upload.array("file"), (req, res) => {
-  res.status(200)
-    .send("File uploaded successfully");
+  res.status(200).send("File uploaded successfully");
 });
