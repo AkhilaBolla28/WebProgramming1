@@ -14,7 +14,7 @@ import EditProfile from "./components/editprofile";
 import Auth from "./components/auth";
 import SignUp from "./components/signup";
 import Searchengine from "./components/searchengine";
-import Summary from "./components/summary2";
+import Summary from "./components/summary";
 import Footer from "./components/footer";
 
 export default class App extends Component {

@@ -4,9 +4,10 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import { Modal } from "bootstrap";
 import Modalform from "./modalform";
-import Summary from "./summary2";
+import Summary from "./summary";
 import { Link } from "react-router-dom";
 import Highlighter from "react-highlight-words";
+import Swal from "sweetalert2";
 
 export default class Searchengine extends Component {
   constructor(props) {
@@ -80,6 +81,13 @@ export default class Searchengine extends Component {
     console.log(this.state.searchres);
   };
 
+  modalClick() {
+    Swal.fire({
+      title: "Login",
+      text: "Please login to insert an entry",
+      icon: "error",
+    });
+}
   render() {
     //Get currentPosts
     const indexOfLastPost = this.state.currentPage * this.state.postsPerPage;
@@ -151,7 +159,19 @@ export default class Searchengine extends Component {
                       </div>
                     </>
                   ) : (
-                    <></>
+                    <>
+                     <div class="form-group col-md-3">
+                        <button
+                          type="button"
+                          class="btn btn-primary"
+                          data-bs-toggle="modal"
+                          // data-bs-target="#entryform"
+                          onClick={this.modalClick}
+                        >
+                          Insert Entry
+                        </button>
+                      </div>
+                      </>
                   )}
                 </div>
               </div>

@@ -96,10 +96,6 @@ export default class SignUp extends Component {
             </div>
       </div>
 
-
-
-
-
         <div className="mb-3" >
           <label class = "small mb-1" for="validationCustom01" >Name</label>
           <input

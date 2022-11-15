@@ -66,6 +66,14 @@ export default class SearchBar extends Component {
         icon: "error",
       });
   }
+  
+  modalClick() {
+      Swal.fire({
+        title: "Login",
+        text: "Please login to insert an entry",
+        icon: "error",
+      });
+  }
 
   handleChange(event) {
     event.preventDefault();
@@ -74,7 +82,7 @@ export default class SearchBar extends Component {
 
   render() {
     return (
-      <div class="container mt-100">
+      <div class="container">
         <div class="row mb-5">
           <div class="col-lg-8 mx-auto">
             <h3 class="font-weight-light mb-4 font-italic text-white mt-40">
@@ -117,8 +125,20 @@ export default class SearchBar extends Component {
                           </button>
                         </div>
                       </>
-                    ) : (
-                      <></>
+                     ) : (
+                     <>
+                       <div class="form-group col-md-3">
+                          <button
+                            type="button"
+                            class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            //data-bs-target="#entryform"
+                            onClick={this.modalClick}
+                          >
+                            Insert Entry
+                          </button>
+                        </div>
+                    </>
                     )}
                   </div>
                 </div>

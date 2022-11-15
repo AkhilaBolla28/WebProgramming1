@@ -62,9 +62,9 @@ export default class modalform extends Component {
           text: "Insert Failed",
           icon: "error"
         })   
-      }});
-    
+      }});   
   }
+
   render() {
     return (
       <div
@@ -88,15 +88,14 @@ export default class modalform extends Component {
               ></button>
             </div>
             <div class="modal-body">
-              <form>
+              <form class="needs-validation" novalidate>
                 <div className="mb-3">
                   <label class="small mb-1">Advisor</label>
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Enter advisor"
-                    name="advisor"
-                    required
+                    name="advisor" 
                     onChange={(e) =>
                       this.setState({ advisor: e.target.value })
                     }
@@ -104,27 +103,29 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Author(s)</label>
+                  <label class="form-label small mb-1" for="validationCustom01">Author(s)</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter author"
-                    name="author"
-                    required
+                    id="validationCustom01"
+                    placeholder="Enter author" 
+                    name="author" required
                     onChange={(e) =>
                       this.setState({ author: e.target.value })
                     }
                   />
+                   <div class="valid-feedback">Valid.</div>
+                <div class="invalid-feedback">Invalid.</div>
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Degree</label>
+                  <label class="form-label small mb-1" for="validationCustom02">Degree</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="degree"
-                    name="degree"
-                    required
+                    id="validationCustom02"
+                    placeholder="degree" required
+                    name="degree" 
                     onChange={(e) =>
                       this.setState({ degree: e.target.value })
                     }
@@ -132,13 +133,13 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Program</label>
+                  <label class="form-label small mb-1" for="validationCustom03">Program</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="program"
-                    name="program"
-                    required
+                    id="validationCustom03"
+                    placeholder="program" required
+                    name="program" 
                     onChange={(e) =>
                       this.setState({ program: e.target.value })
                     }
@@ -146,13 +147,13 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Title</label>
+                  <label class="form-label small mb-1" for="validationCustom04">Title</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter title"
-                    name="title"
-                    required
+                    id="validationCustom04"
+                    placeholder="Enter title" required
+                    name="title" 
                     onChange={(e) =>
                       this.setState({ title: e.target.value })
                     }
@@ -160,13 +161,13 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">University</label>
+                  <label class="form-label small mb-1" for="validationCustom05">University</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter university"
-                    name="university"
-                    required
+                    id="validationCustom05"
+                    placeholder="Enter university" required
+                    name="university" 
                     onChange={(e) =>
                       this.setState({ university: e.target.value })
                     }
@@ -174,13 +175,13 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Year</label>
+                  <label class="form-label small mb-1" for="validationCustom06">Year</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="year"
+                    id="validationCustom06"
+                    placeholder="year" required
                     name="year"
-                    required
                     onChange={(e) =>
                       this.setState({ year: e.target.value })
                     }
@@ -188,13 +189,13 @@ export default class modalform extends Component {
                 </div>
 
                 <div className="mb-3">
-                  <label class="small mb-1">Abstract</label>
+                  <label class="form-label small mb-1" for="validationCustom07">Abstract</label>
                   <input
                     type="text"
                     className="form-control"
-                    placeholder="Enter text"
-                    name="text"
-                    required
+                    id="validationCustom07"
+                    placeholder="Enter text" required
+                    name="text" 
                     onChange={(e) =>
                       this.setState({ text: e.target.value })
                     }
@@ -207,9 +208,7 @@ export default class modalform extends Component {
                 <input type="file" className="form-control" id="file"   onChange={(e) =>
                       this.setState({ file: e.target.files[0]})
                     }/>
-              </form>
-            </div>
-            <div class="modal-footer">
+              <div class="modal-footer">
               <button
                 type="button"
                 class="btn btn-secondary"
@@ -217,9 +216,11 @@ export default class modalform extends Component {
               >
                 Close
               </button>
-              <button type="button" class="btn btn-primary" onClick={this.handleClick}>
+              <button type="submit" class="btn btn-primary" onClick={this.handleClick}>
                 Insert
               </button>
+            </div>
+              </form>
             </div>
           </div>
         </div>

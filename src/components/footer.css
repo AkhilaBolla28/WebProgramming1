@@ -1,13 +1,18 @@
-#footer {
-    /* clear: both;
+/* .footer {
+    clear: both;
     position: relative;
     height: 200px;
-    margin-top: -200px; */
-    flex: 0 0 50px;
-    margin-top: auto;
+    margin-top: -200px; 
+    /* flex: 0 0 50px;
+    margin-top: auto; */
+/* } */ */
+/* .navbar-custom {
+  background-color: #21587b9e !important;
+}   */
+#footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
 }
-/* .container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  } */
