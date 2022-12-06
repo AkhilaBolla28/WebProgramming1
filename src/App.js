@@ -16,6 +16,8 @@ import SignUp from "./components/signup";
 import Searchengine from "./components/searchengine";
 import Summary from "./components/summary";
 import Footer from "./components/footer";
+import About from "./components/about"
+import Contact from "./components/contact"
 
 export default class App extends Component {
   render() {
@@ -40,9 +42,12 @@ export default class App extends Component {
             <Route path="/changepassword" element={<Changepassword />} />
             <Route path="/editprofile" element={<EditProfile />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
+          <Footer />
         </Router>
-        <Footer />
+       
       </div>
     );
   }

@@ -11,5 +11,13 @@
   }
 
   .navbar-custom {
-  background-color: #21587b9e !important;
+  background-color: #21587b9e ;
 }  
+
+/* h2 {
+  color: rgb(8, 8, 8);
+  font-family: 'Times new Roman';
+  text-align: center;
+  font-size: 24px;
+  margin: 0 !important;
+} */

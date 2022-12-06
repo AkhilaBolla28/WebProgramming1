@@ -4,6 +4,8 @@ import SearchIcon from "@material-ui/icons/Search";
 import CloseIcon from "@material-ui/icons/Close";
 import Modalform from "./modalform";
 import Swal from "sweetalert2";
+import DOMPurify from 'dompurify';
+import sanitize from "sanitize-html";
 
 export default class SearchBar extends Component {
   constructor(props) {
@@ -56,6 +58,10 @@ export default class SearchBar extends Component {
   }
   handleClick(event) {
     event.preventDefault();
+    this.state.title = this.state.title.replace(/(<([^>]+)>)/gi,'');
+    this.state.title = this.state.title.replace(/^\s*\/*\s*|\s*\/*\s*$/gm,'');
+    this.state.title = this.state.title.replace(/\/$/g,'');
+    this.state.title = this.state.title.replace(/\\/g,'');
     window.localStorage.setItem("title", this.state.title);
     if (this.state.title) {
       window.location.href = "./searchengine/" + this.state.title;
@@ -77,12 +83,14 @@ export default class SearchBar extends Component {
 
   handleChange(event) {
     event.preventDefault();
-    this.setState({ title: event.target.value });
+    this.setState({ title: event.target.value});
   }
 
   render() {
     return (
       <div class="container">
+        <br/>
+        <br/>
         <div class="row mb-5">
           <div class="col-lg-8 mx-auto">
             <h3 class="font-weight-light mb-4 font-italic text-white mt-40">
@@ -91,7 +99,7 @@ export default class SearchBar extends Component {
             <div class="bg-white p-5 rounded shadow bck">
               <form>
                 <div class="row mb-4">
-                  <div class="form-group col-md-9">
+                  <div class="form-group col-md-9 mt-2">
                     <input
                       id="exampleFormControlInput5"
                       type="text"
@@ -101,7 +109,7 @@ export default class SearchBar extends Component {
                       class="form-control form-control-underlined"
                     />
                   </div>
-                  <div class="form-group col-md-3">
+                  <div class="form-group col-md-3 mt-2">
                     <button
                       type="button"
                       class="btn btn-primary"
@@ -152,3 +160,4 @@ export default class SearchBar extends Component {
     );
   }
 }
+

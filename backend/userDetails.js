@@ -10,6 +10,7 @@ const UserDetailsScehma = new mongoose.Schema(
     password: String,
     confirmPassword: String,
     otp: String,
+    key: String,
   },
   {
     collection: "reactapp",

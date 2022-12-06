@@ -35,22 +35,23 @@ export default class UserDetails extends Component {
     return (
       <div class="container">
         <div class="row">
-          <div class="col-md-4"></div>
-          <div class="col-md-4">
-          <div class="shadow p-3 mb-5 bg-body rounded">
+          <div class="col-md-2"></div>
+          <div class="col-md-7">
+          <div class="shadow p-3 mb-8 bg-body rounded">
          
-            <h1 class="text-center">User Profile</h1>
+            <h2 class="text-center">User Profile</h2>
             
-            <label class = "small mb-1">Name</label>
-            <h3>{this.state.userData.name}</h3>
+            <label class = "mt-3" >Name :</label><h5>{this.state.userData.name}</h5>
 
-            <label class = "small mb-1">Email</label> <h3>{this.state.userData.email}</h3>
+            <label class = "mt-3">Email :</label> <h5>{this.state.userData.email}</h5>
 
-            <label class = "small mb-1">profession</label> <h3>{this.state.userData.profession}</h3>
+            <label class = "mt-3">Profession :</label> <h5>{this.state.userData.profession}</h5>
 
-            <label class = "small mb-1">phoneNumber</label> <h3>{this.state.userData.phoneNumber}</h3>
+            <label class = "mt-3">PhoneNumber :</label> <h5>{this.state.userData.phoneNumber}</h5>
 
-            <label class = "small mb-1">Address</label> <h3>{this.state.userData.address}</h3>
+            <label class = "mt-3">Address :</label> <h5>{this.state.userData.address}</h5>
+
+            <label class = "mt-3">API User Key :</label> <h5>{this.state.userData.key}</h5>
 
            <div class="text-center mt-4">
            <a type="button" href="/editprofile" class="btn btn-primary">Edit Profile </a>
@@ -58,8 +59,8 @@ export default class UserDetails extends Component {
           
           </div>
           </div>
-          <div class="col-md-4"></div>
-        </div> 
+          <div class="col-md-2"></div>
+         </div> 
       </div>
     );
   }

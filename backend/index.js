@@ -50,6 +50,8 @@ app.post("/register", async (req, res) => {
   } = req.body;
 
   const encryptedPassword = await bcrypt.hash(password, 10);
+  const userkey = await bcrypt.hash(email, 10);
+
   try {
     const oldUser = await User.findOne({ email });
 
@@ -64,6 +66,7 @@ app.post("/register", async (req, res) => {
       address,
       password: encryptedPassword,
       confirmPassword: encryptedPassword,
+      key : userkey,
     });
     res.send({ status: "ok" });
   } catch (error) {
@@ -317,6 +320,9 @@ app.get("/searchengine", async (req, res) => {
   });
 });
 
+
+
+
 app.post("/insert", async (req, res) => {
   const {
     etd_file_id,
@@ -333,6 +339,7 @@ app.post("/insert", async (req, res) => {
   wikifier_terms = [];
   userKey = "koextlklicciiuokgsbpoupcxraqtz";
   try {
+     //getwikifier(text);
     // const options1 = {
     //   url:"http://www.wikifier.org/annotate-article?text="+text+"&lang=en&userKey=koextlklicciiuokgsbpoupcxraqtz&pageRankSqThreshold=0.2&nTopDfValuesToIgnore=200&nWordsToIgnoreFromList=200&wikiDataClasses=false&wikiDataClassIds=false&support=false&ranges=false&minLinkFrequency=1&includeCosines=false&maxMentionEntropy=3&applyPageRankSqThreshold =true"
 
@@ -375,10 +382,33 @@ app.post("/insert", async (req, res) => {
       res.send(data);
       console.log(data);
     });
-  } catch (error) {
-    console.log(error);
-  }
+   } catch (error) {
+     console.log(error);
+   }
 });
+
+async function getwikifier(text){
+  var text = text;
+     const options1 = {
+      url:"http://www.wikifier.org/annotate-article?text="+text+"&lang=en&userKey=koextlklicciiuokgsbpoupcxraqtz&pageRankSqThreshold=0.2&nTopDfValuesToIgnore=200&nWordsToIgnoreFromList=200&wikiDataClasses=false&wikiDataClassIds=false&support=false&ranges=false&minLinkFrequency=1&includeCosines=false&maxMentionEntropy=3&applyPageRankSqThreshold =true"
+
+    }
+    console.log(options1);
+    await request.get(options1, function (err, data) {
+        //console.log("at request")
+        res.send(data);
+        console.log(res.data);
+        //wikifier_terms =data;
+      });
+  
+      console.log("wiki",wikifier_terms);
+      let filteredannotations = wikifier_terms.map((annotation) => ({
+        term : annotation.title,
+        url : annotation.url,
+      }));
+      wikifier_terms = filteredannotations;
+
+}
 
 app.get("/count", async (req, res) => {
   try {
@@ -433,4 +463,51 @@ app.post("/upload", upload.single("file"), (req, res) => {
 
 app.post("/upload/multiple", upload.array("file"), (req, res) => {
   res.status(200).send("File uploaded successfully");
+});
+
+app.post("/siteverify", async (req, res) => {
+  const captcha_value = req.body.response;
+  console.log(req.params);
+  try {
+    const options = {
+      url: "https://www.google.com/recaptcha/api/siteverify?secret=6LeBECQjAAAAACBeIhSLszU9xCEoY5hka4-Q2yle&response="+captcha_value,
+    }
+    //console.log(options)
+    await request(options, function (err, data) {
+      res.send(data.body);
+    });
+  } catch (error) {
+    console.log(error)
+  }
+});
+
+app.get("/cmdsearch", async (req, res) => {
+  const { title } = req.query;
+  const { key } = req.query;
+try{
+  const keyUser = await User.findOne({ key });
+  if(keyUser){
+    const options = {
+      url: "http://localhost:9200/wiki_library/_search",
+      body: {
+        query: {
+          match: {
+            title: title,
+          },
+        },
+        size: 1000,
+      },
+      json: true,
+    };
+    console.log({ options });
+    await request(options, function (err, data) {
+      // console.log(data,err);
+      res.send(data.body.hits);
+    });
+  }else{
+    res.send({ status: "Invalid User key" })
+  }
+
+} catch (error) {}
+
 });

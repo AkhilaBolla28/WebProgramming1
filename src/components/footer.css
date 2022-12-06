@@ -6,13 +6,39 @@
     /* flex: 0 0 50px;
     margin-top: auto; */
 /* } */ */
-/* .navbar-custom {
-  background-color: #21587b9e !important;
-}   */
-#footer {
+
+.navbar-footer{
+  background-color: #67879d!important;
+}  
+
+footer{
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: #67879d;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+
+/* #footer {
   position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
   text-align: center;
-}
+  margin-top: auto;
+  flex: 0 0 50px;
+} */
+
+/* 
+h2 {
+  color: rgb(8, 8, 8);
+  font-family: 'Times new Roman';
+  text-align: center;
+  font-size: 18px;
+  margin: 0 !important;
+} */
+
+

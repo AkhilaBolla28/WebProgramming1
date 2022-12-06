@@ -1,0 +1,10 @@
+.trigger {
+    position: absolute;
+    opacity: 1;
+    transition: 0.1s;
+    
+  }
+  .trigger-hidden {
+    opacity: 0;
+    visibility: hidden;
+  }

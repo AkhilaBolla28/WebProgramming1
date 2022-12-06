@@ -1,27 +1,50 @@
 import React, { Component } from "react";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Swal from 'sweetalert2'
+import ReCAPTCHA from 'react-google-recaptcha'
 
 
 export default class Login extends Component  {
-
 
   constructor(props) {
     super(props);
     this.state = {
       email: "",
       password: "",
+      captcha_value:"",
     };
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
-
+  componentDidMount() {
+    localStorage.clear();
+  }
 
   handleSubmit(e) {
     e.preventDefault();
-    const { email, password } = this.state;
-    console.log(email, password);
-   
-    fetch("http://localhost:5000/login", {
+    const { email, password, captcha_value} = this.state;
+    //console.log(email, password, captcha_value);
+    this.state.captcha_value = window.localStorage.getItem("captcha_value")
+
+    if (this.state.captcha_value) 
+   {
+    fetch("http://localhost:5000/siteverify", {
+      method: "POST",
+      crossDomain: true,
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify({
+        "response" : this.state.captcha_value,
+      }),
+    }).then((res) => res.json())
+    .then((data) => {
+      //console.log(data);
+      //console.log(data.success);
+     if(data.success = "true"){
+      fetch("http://localhost:5000/login", {
       method: "POST",
       crossDomain: true,
       headers: {
@@ -36,7 +59,7 @@ export default class Login extends Component  {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data, "userRegister");
+        //console.log(data, "userRegister");
         if (data.status == "ok") {
           Swal.fire({
             title: "Login",
@@ -62,9 +85,31 @@ export default class Login extends Component  {
           })   
         }
         
-      });
+      });   }
+      else{
+        Swal.fire({
+          title: "Verify the captcha",
+          text: "You must verify the captcha before login!",
+          icon: "error"
+        }) 
+     }
+
+    })
+    
+   }else{
+    Swal.fire({
+      title: "Verify the captcha",
+      text: "You must verify the captcha before login!",
+      icon: "error"
+    }) 
+ }
 
 }
+handleChange(value){
+  //console.log('captcha value:', value);
+  window.localStorage.setItem("captcha_value", value);
+};
+
   render() {
     return (
         <div class="container" >
@@ -79,6 +124,7 @@ export default class Login extends Component  {
               </div>
             </div>
           </div>
+
         <div className="mb-3">
           <label>Email address</label>
           <input
@@ -99,6 +145,15 @@ export default class Login extends Component  {
           />
         </div>
 
+        <div className="g-recaptacha">
+      <ReCAPTCHA
+        sitekey="6LeBECQjAAAAALzquKxIPmy-O-7aEa5CGLcnxmc3"
+        size="normal"
+        // hl="tr"
+        theme="light"
+        onChange={this.handleChange}
+      />
+    </div>
 
         <div className="d-grid">
           <button type="submit" className="btn btn-primary">
@@ -112,9 +167,6 @@ export default class Login extends Component  {
           {/* <a href="/signup">Sign Up ?</a> */}
         </p>
         </div>
-        
-       
-        
       </form>
       </div>
     );

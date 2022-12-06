@@ -8,6 +8,9 @@ import Summary from "./summary";
 import { Link } from "react-router-dom";
 import Highlighter from "react-highlight-words";
 import Swal from "sweetalert2";
+import ReactPaginate from "react-paginate";
+import "./searchengine.css";
+import DOMPurify from 'dompurify';
 
 export default class Searchengine extends Component {
   constructor(props) {
@@ -18,8 +21,12 @@ export default class Searchengine extends Component {
       title: "",
       searcharray: [],
       searchres: "",
-      currentPage: 1,
-      postsPerPage: 5,
+      // currentPage: 1,
+      // postsPerPage: 5,
+// newly added
+   perPage: 5,
+   page: 0,
+   pages: 0,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -42,6 +49,9 @@ export default class Searchengine extends Component {
         //this.setState({ searchData: data.hits[0]._source});
         this.setState({ searcharray: data.hits });
         this.setState({ title: title });
+        this.setState({
+          pages: Math.ceil(this.state.searcharray.length / this.state.perPage)
+        });
       });
   }
 
@@ -51,6 +61,12 @@ export default class Searchengine extends Component {
   }
   handleClick(event) {
     event.preventDefault();
+    this.state.title = this.state.title.replace(/(<([^>]+)>)/gi,'');
+    this.state.title = this.state.title.replace(/^\s*\/*\s*|\s*\/*\s*$/gm,'');
+    this.state.title = this.state.title.replace(/\/$/g,'');
+    this.state.title = this.state.title.replace(/\\/g,'');
+    //this.state.title = this.state.title.replace(/[^a-zA-Z0-9 ]/g,'');
+
     window.localStorage.setItem("title", this.state.title);
     const { title, value } = this.state;
     window.location.href = "./" + this.state.title;
@@ -80,6 +96,10 @@ export default class Searchengine extends Component {
     this.setState({ searchres: d });
     console.log(this.state.searchres);
   };
+  handlePageClick = (event) => {
+    let page = event.selected;
+    this.setState({page})
+  }
 
   modalClick() {
     Swal.fire({
@@ -89,42 +109,47 @@ export default class Searchengine extends Component {
     });
 }
   render() {
-    //Get currentPosts
-    const indexOfLastPost = this.state.currentPage * this.state.postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - this.state.postsPerPage;
-    const currentPosts = this.state.searcharray.slice(
-      indexOfFirstPost,
-      indexOfLastPost
-    );
+    //newly added
+  //const {page, perPage, pages, list} = this.state;
+   let items = this.state.searcharray.slice(this.state.page * this.state.perPage, (this.state.page + 1) * this.state.perPage);
 
-    //Implement page numbers
-    const pageNumbers = [];
+    // //Get currentPosts
+    // const indexOfLastPost = this.state.currentPage * this.state.postsPerPage;
+    // const indexOfFirstPost = indexOfLastPost - this.state.postsPerPage;
+    // const currentPosts = this.state.searcharray.slice(
+    //   indexOfFirstPost,
+    //   indexOfLastPost
+    // );
 
-    for (
-      let i = 1;
-      i <= Math.ceil(this.state.searcharray.length / this.state.postsPerPage);
-      i++
-    ) {
-      pageNumbers.push(i);
-    }
+    // //Implement page numbers
+    // const pageNumbers = [];
 
-    //Set current page
-    const setPage = (pageNum) => {
-      this.setState({ currentPage: pageNum });
-    };
+    // for (
+    //   let i = 1;
+    //   i <= Math.ceil(this.state.searcharray.length / this.state.postsPerPage);
+    //   i++
+    // ) {
+    //   pageNumbers.push(i);
+    // }
+
+    // //Set current page
+    // const setPage = (pageNum) => {
+    //   this.setState({ currentPage: pageNum });
+    // };
 
     const title = window.localStorage.getItem("title");
 
     return (
       <div class="container mt-150">
+        <br/>
         <div class="row mb-5">
           <div class="col-lg-8 mx-auto">
-            <h2 class="font-weight-light mb-4 font-italic text-white mt-40">
+            <h3 class="font-weight-light mb-4 font-italic text-white mt-40">
               Welcome to WikiLibrary!!
-            </h2>
+            </h3>
             <div class="bg-white p-40 rounded shadow bck">
-              <div class="row mb-4">
-                <div class="form-group col-md-8">
+              <div class="row mb-4 ">
+                <div class="form-group col-md-8 mt-2">
                   <input
                     id="exampleFormControlInput5"
                     type="text"
@@ -134,7 +159,7 @@ export default class Searchengine extends Component {
                     class="form-control form-control-underlined"
                   />
                 </div>
-                <div class="form-group col-md-3">
+                <div class="form-group col-md-4 mt-2">
                   <a
                     type="button"
                     class="btn btn-primary"
@@ -178,6 +203,8 @@ export default class Searchengine extends Component {
 
               <Modalform />
 
+              <br/>
+
               <div class="row">
                 <div class="col-lg-12 mx-auto">
                   <h4 class="font-weight-light font-italic text-black mt-40">
@@ -192,7 +219,7 @@ export default class Searchengine extends Component {
                   </h4>
                 </div>
               </div>
-              {currentPosts.map((d) => (
+              {items.map((d) => (
                 <div class="row result-bg">
                   <div class="text-align">
                     <h5 class="font-weight-light font-italic text-black text-capitalize mt-40">
@@ -213,16 +240,7 @@ export default class Searchengine extends Component {
                     <br />{" "}
                   </div>
                   <dl class="row">
-                    <dt class="col-sm-3">Advisor</dt>
-                    <dd class="col-sm-9 text-capitalize">
-                      <Highlighter
-                        highlightClassName="YourHighlightClass"
-                        searchWords={[this.state.title]}
-                        autoEscape={true}
-                        textToHighlight={d._source.advisor}
-                      />
-                    </dd>
-
+                    
                     <dt class="col-sm-3">Author(s)</dt>
                     <dd class="col-sm-9 text-capitalize">
                       <Highlighter
@@ -299,7 +317,7 @@ export default class Searchengine extends Component {
 
               <br></br>
 
-              {
+              {/* {
                 <nav aria-label="Page navigation example">
                   <ul class="pagination">
                     {pageNumbers.map((pageNum, index) => (
@@ -318,7 +336,16 @@ export default class Searchengine extends Component {
                     ))}
                   </ul>
                 </nav>
-              }
+              } */}
+          <ReactPaginate
+         previousLabel={'Prev'}
+         nextLabel={'Next'}
+         pageCount={this.state.pages}
+         onPageChange={this.handlePageClick}
+         containerClassName={'pagination'}
+         activeClassName={'active'}
+       />
+
             </div>
           </div>
         </div>

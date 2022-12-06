@@ -7,6 +7,8 @@ import HomeIcon from "@mui/icons-material/Home";
 import LogoutIcon from "@mui/icons-material/Logout";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PersonIcon from "@mui/icons-material/Person";
+import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import LoginIcon from '@mui/icons-material/Login';
 
 export default class Navbar extends Component {
   constructor(props) {
@@ -113,8 +115,8 @@ export default class Navbar extends Component {
                       href="/searchbar"
                       aria-expanded="true"
                     >
-                      {" "}
-                      SearchEngine{" "}
+                      
+                      <i> <ManageSearchIcon /></i>SearchEngine
                     </a>
                   </li>
                   <li class="nav-link navbar-nav navbar-right">
@@ -123,8 +125,7 @@ export default class Navbar extends Component {
                       href="/SignInOut"
                       aria-expanded="true"
                     >
-                      {" "}
-                      Would you like to Login?{" "}
+                      <i> <LoginIcon /></i>Would you like to Login?
                     </a>
                   </li>
                 </ul>
